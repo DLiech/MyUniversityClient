@@ -1,0 +1,366 @@
+﻿<div class="row">
+    <div class="col">
+        <h1>Student Data With Major</h1>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title mb-3">
+                    <h4>Create/Edit Student Data</h4>
+                </div>
+                <div class="card-text">
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <label for="txtStudentId" class="col-form-label">Student ID</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtStudentId" class="form-control">
+                        </div>
+                        <div id="txtStudentId-error" class="error-text text-danger"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <label for="txtFirstName" class="col-form-label">First Name</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtFirstName" class="form-control">
+                        </div>
+                        <div id="txtFirstName-error" class="error-text text-danger"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <label for="txtLastName" class="col-form-label">Last Name</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" id="txtLastName" class="form-control">
+                        </div>
+                        <div id="txtLastName-error" class="error-text text-danger"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mt-2">
+                            <label for="numAge" class="col-form-label">Age</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="number" id="numAge" class="form-control">
+                        </div>
+                        <div id="numAge-error" class="error-text text-danger"></div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3">
+                            <label for="numMajorId" class="col-form-label">Major Id</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="number" id="numMajorId" class="form-control">
+                        </div>
+                        <div id="numMajorId-error" class="error-text text-danger"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-3" id="btnCreateStudent">Tambah Mahasiswa Baru</button>
+                <button class="btn btn-primary mt-3" id="btnEditStudent">Edit Mahasiswa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <h2>Daftar Mahasiswa</h2>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <label for="txtSearchStudent" class="col-form-label">Student ID</label>
+        </div>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="txtSearchStudent">
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-primary" id="btnSearchStudent">Find</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger" id="btnDeleteStudent">Delete</button>
+        </div>
+        <div id="txtSearchStudent-error" class="error-text text-danger"></div>
+    </div>
+    <div class="col-12" id="wrapper-table-student">
+    </div>
+</div>
+
+<div class="row mt-4">
+    <h2>Daftar Jurusan</h2>
+    <div class="col-12" id="wrapper-table-major">
+        <table class="table table-bordered text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <td>Major Id</td>
+                    <td>Major Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Information Technology and Computer Science</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Engineering</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Accounting</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Medicine and Healthcare</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Education</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>International Business Management</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Agriculture and Environmental Science</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Language and Literature</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Tourism and Hospitality</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Social Sciences</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("Component/component-table-student")
+
+@section Scripts {
+    <script>
+        $(document).ready(async function () {
+            var app = {};
+
+            app.getReq = function (url, params) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        data: params,
+                        success: function (response) {
+                            resolve(response);
+                        },
+                        error: function (error) {
+                            reject(error);
+                        },
+                        contentType: "application/json"
+                    })
+                });
+            }
+
+            app.postReq = function (url, params) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: JSON.stringify(params),
+                        success: function (response) {
+                            resolve(response);
+                        },
+                        error: function (error) {
+                            reject(error);
+                        },
+                        contentType: "application/json; charset=utf-8",
+                    })
+                });
+            }
+
+            async function getStudentList(){
+                try {
+                    let studentListResponse = await app.getReq("/Student/GetStudent");
+
+                    if (studentListResponse){
+                        return studentListResponse.data;
+                    }
+                } catch (error) {
+                    alert(error);
+                    return false;
+                }
+            }
+
+            async function findStudent(id){
+                try {
+                    let studentListResponse = await app.getReq("/Student/FindStudent?id=" + id);
+
+                    if (studentListResponse){
+                        return studentListResponse.data == null ? [] : [studentListResponse.data];
+                    }
+                } catch (error) {
+                    alert(error);
+                    return false;
+                }
+            }
+
+            async function createStudent(param){
+                try {
+                    let createStudentResponse = await app.postReq("/Student/CreateStudent", param);
+                    alert(createStudentResponse.data);
+
+                    if (createStudentResponse.statusCode == 201) await initPage();
+                } catch (error) {
+                    alert(error);
+                    return false;
+                }
+            }
+
+            async function updateStudent(id, param){
+                try {
+                    let createStudentResponse = await app.postReq("/Student/UpdateStudent?id=" + id, param);
+                    alert(createStudentResponse.data);
+
+                    if (createStudentResponse.statusCode == 200) await initPage();
+                } catch (error) {
+                    alert(error);
+                    return false;
+                }
+            }
+
+            async function deleteStudent(id){
+                try {
+                    let deleteStudentResponse = await app.postReq("/Student/DeleteStudent?id=" + id);
+                    alert(deleteStudentResponse.data);
+
+                    if (deleteStudentResponse.statusCode == 200) await initPage();
+                } catch (error) {
+                    alert(error);
+                    return false;
+                }
+            }
+
+            async function initPage(){
+                const studentList = await getStudentList();
+
+                const templateTableStudent = _.template(
+                    $("#component-table-student").html()
+                )
+
+                $("#wrapper-table-student").html(
+                    templateTableStudent({ data: studentList })
+                )
+            }
+
+            var param = {};
+            var newStudentId;
+            function validateRequest(isValidateStudentId){
+                errorMessages = "";
+                $(".error-text").html("");
+
+                // validateRequest
+
+                const newFirstName = $("#txtFirstName").val();
+                const newLastName = $("#txtLastName").val();
+                const newAge = $("#numAge").val();
+                const newMajorId = $("#numMajorId").val();
+
+                newStudentId = $("#txtStudentId").val();
+
+                if (isValidateStudentId){
+                    if (newStudentId == null || newStudentId == ""){
+                        errorMessages = "Student ID cannot be empty";
+                        $("#txtStudentId-error").html(errorMessages);
+                    }
+                }
+
+                if (newFirstName == null || newFirstName == ""){
+                    errorMessages = "First Name cannot be empty";
+                    $("#txtFirstName-error").html(errorMessages);
+                }
+
+                if (newLastName == null || newLastName == ""){
+                    errorMessages = "Last Name cannot be empty";
+                    $("#txtLastName-error").html(errorMessages);
+                }
+
+                if (newAge <= 0 || newAge >= 200){
+                    errorMessages = "Age must be realistic";
+                    $("#numAge-error").html(errorMessages);
+                }
+
+                if (newMajorId <= 0){
+                    errorMessages = "Major ID cannot be negative";
+                    $("#numMajorId-error").html(errorMessages);
+                }
+
+                if (errorMessages != ""){
+                    alert("There is an error in your request");
+                    return false
+                }
+
+                param = {
+                    firstName: newFirstName,
+                    lastName: newLastName,
+                    age: newAge,
+                    majorId: newMajorId
+                }
+
+                return true
+            }
+
+            await initPage();
+
+            $("#btnSearchStudent").on("click", async function(){
+                const searchStudent = $("#txtSearchStudent").val();
+
+                if(searchStudent == null || searchStudent == ""){
+                    errorMessages = "Student ID cannot be empty";
+                    $("#txtSearchStudent-error").html(errorMessages); 
+                    return false;
+                }
+
+                // Find Data
+                let studentList = await findStudent(searchStudent);
+
+                const templateTableStudent = _.template(
+                    $("#component-table-student").html()
+                )
+
+                $("#wrapper-table-student").html(
+                    templateTableStudent({ data: studentList })
+                )
+            })
+
+            $("#btnCreateStudent").on("click", async function(){
+                if (validateRequest(false)) {
+                    await createStudent(param);
+                }
+            })
+
+            $("#btnEditStudent").on("click", async function(){
+                if (validateRequest(true)) {
+                    await updateStudent(newStudentId, param);
+                }
+            })
+
+            $("#btnDeleteStudent").on("click", async function(){
+                const searchStudent = $("#txtSearchStudent").val();
+
+                if (searchStudent == null || searchStudent == ""){
+                    errorMessages= "Student ID cannot be empty";
+                    $("#txtSearchStudent-error").html(errorMessages);
+                    return false;
+                }
+
+                await deleteStudent(searchStudent);
+
+            })
+        });
+    </script>
+}
